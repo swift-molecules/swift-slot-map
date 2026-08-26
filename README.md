@@ -80,9 +80,7 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 ## Related Packages
 
-- [`swift-storage-arena`](https://github.com/swift-molecules/swift-storage-arena) — `Storage.Generational`, the generational substrate behind a slot map.
 - [`swift-store`](https://github.com/swift-molecules/swift-store) — `Store.Protocol`, the column capability `SlotMap` is built over.
-- [`swift-shared`](https://github.com/swift-molecules/swift-shared) — `Shared`, an optional CoW backing for a slot map.
 
 ---
 
