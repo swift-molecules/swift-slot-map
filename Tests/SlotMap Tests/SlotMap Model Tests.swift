@@ -1,10 +1,10 @@
-import Buffer_Primitives_Test_Support
-import Index_Primitives
+import Buffer_Test_Support
+import Index
 import Memory_Allocator_Primitive
-import Memory_Heap_Primitives
+import Memory_Heap
 import Ownership_Shared_Primitive
-import SlotMap_Primitives
-import Storage_Generational_Primitives
+import SlotMap
+import Storage_Generational
 import Storage_Primitive
 import Store_Primitive
 import Testing

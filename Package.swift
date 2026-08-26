@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-slot-map-primitives",
+    name: "swift-slot-map",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -15,43 +15,43 @@ let package = Package(
 
         .library(name: "SlotMap Primitive", targets: ["SlotMap Primitive"]),
 
-        .library(name: "SlotMap Primitives", targets: ["SlotMap Primitives"]),
+        .library(name: "SlotMap", targets: ["SlotMap"]),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-storage-generational-primitives.git",
+            url: "https://github.com/swift-molecules/swift-storage-generational.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-storage-primitives.git",
+            url: "https://github.com/swift-molecules/swift-storage.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-ownership-shared-primitives.git",
+            url: "https://github.com/swift-molecules/swift-ownership-shared.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-buffer-primitives.git",
+            url: "https://github.com/swift-molecules/swift-buffer.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-heap.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git",
+            url: "https://github.com/swift-molecules/swift-memory-allocation.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            url: "https://github.com/swift-molecules/swift-index.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-ordinal-primitives.git",
+            url: "https://github.com/swift-molecules/swift-ordinal.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-tagged-primitives.git",
+            url: "https://github.com/swift-molecules/swift-tagged.git",
             branch: "main"
         ),
     ],
@@ -61,67 +61,87 @@ let package = Package(
             name: "SlotMap Primitive",
             dependencies: [
                 .product(
-                    name: "Storage Generational Primitives",
-                    package: "swift-storage-generational-primitives"
+                    name: "Storage Generational",
+                    package: "swift-storage-generational"
                 ),
-                .product(name: "Storage Primitive", package: "swift-storage-primitives"),
-                .product(name: "Store Primitive", package: "swift-storage-primitives"),
-                .product(name: "Store Protocol Primitives", package: "swift-storage-primitives"),
-                .product(name: "Buffer Protocol Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Store Primitive", package: "swift-storage"),
+                .product(name: "Store Protocol", package: "swift-storage"),
+                .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
                     name: "Ownership Shared Primitive",
-                    package: "swift-ownership-shared-primitives"
+                    package: "swift-ownership-shared"
                 ),
-                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
                 .product(
                     name: "Memory Allocator Primitive",
-                    package: "swift-memory-allocation-primitives"
+                    package: "swift-memory-allocation"
                 ),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Index", package: "swift-index"),
             ]
         ),
 
         .target(
-            name: "SlotMap Primitives",
+            name: "SlotMap",
             dependencies: [
                 "SlotMap Primitive",
                 .product(
-                    name: "Storage Generational Primitives",
-                    package: "swift-storage-generational-primitives"
+                    name: "Storage Generational",
+                    package: "swift-storage-generational"
                 ),
-                .product(name: "Storage Primitive", package: "swift-storage-primitives"),
-                .product(name: "Store Primitive", package: "swift-storage-primitives"),
-                .product(name: "Store Protocol Primitives", package: "swift-storage-primitives"),
-                .product(name: "Buffer Protocol Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Store Primitive", package: "swift-storage"),
+                .product(name: "Store Protocol", package: "swift-storage"),
+                .product(name: "Buffer Protocol", package: "swift-buffer"),
                 .product(
                     name: "Ownership Shared Primitive",
-                    package: "swift-ownership-shared-primitives"
+                    package: "swift-ownership-shared"
                 ),
-                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
                 .product(
                     name: "Memory Allocator Primitive",
-                    package: "swift-memory-allocation-primitives"
+                    package: "swift-memory-allocation"
                 ),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Index", package: "swift-index"),
+                .product(
+                    name: "Ordinal Standard Library Integration",
+                    package: "swift-ordinal"
+                ),
             ]
         ),
 
         .testTarget(
-            name: "SlotMap Primitives Tests",
+            name: "SlotMap Tests",
             dependencies: [
-                "SlotMap Primitives",
+                "SlotMap",
                 .product(
-                    name: "Buffer Primitives Test Support",
-                    package: "swift-buffer-primitives"
+                    name: "Buffer Test Support",
+                    package: "swift-buffer"
                 ),
                 .product(
-                    name: "Tagged Primitives Standard Library Integration",
-                    package: "swift-tagged-primitives"
+                    name: "Tagged Standard Library Integration",
+                    package: "swift-tagged"
                 ),
                 .product(
-                    name: "Ordinal Primitives Standard Library Integration",
-                    package: "swift-ordinal-primitives"
+                    name: "Ordinal Standard Library Integration",
+                    package: "swift-ordinal"
                 ),
+                .product(name: "Index", package: "swift-index"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation"
+                ),
+                .product(name: "Memory Heap", package: "swift-memory-heap"),
+                .product(
+                    name: "Ownership Shared Primitive",
+                    package: "swift-ownership-shared"
+                ),
+                .product(
+                    name: "Storage Generational",
+                    package: "swift-storage-generational"
+                ),
+                .product(name: "Storage Primitive", package: "swift-storage"),
+                .product(name: "Store Primitive", package: "swift-storage"),
             ]
         ),
     ],

@@ -1,6 +1,6 @@
-public import Buffer_Protocol_Primitives
+public import Buffer_Protocol
 public import Ownership_Shared_Primitive
-public import Store_Protocol_Primitives
+public import Store_Protocol
 
 extension __SlotMap
 where

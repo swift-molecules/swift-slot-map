@@ -1,12 +1,12 @@
-import Index_Primitives
+import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap_Primitives
+public import Memory_Heap
 public import Ownership_Shared_Primitive
 public import SlotMap_Primitive
-public import Storage_Generational_Primitives
+public import Storage_Generational
 public import Storage_Primitive
 public import Store_Primitive
-public import Store_Protocol_Primitives
+public import Store_Protocol
 
 extension __SlotMap where S: ~Copyable {
 

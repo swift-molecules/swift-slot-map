@@ -1,7 +1,7 @@
 # .github/metadata.yaml
 description: "The generational slot-map column — SlotMap<S> is a stable-handle discipline over generational storage."
 topics:
-  - primitives
+  - molecules
   - slot-map
 homepage: "https://swift-institute.org"
 readme:

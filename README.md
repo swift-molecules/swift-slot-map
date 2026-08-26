@@ -1,7 +1,7 @@
-# SlotMap Primitives
+# SlotMap
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-slot-map-primitives/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-slot-map-primitives/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-slot-map/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-slot-map/actions/workflows/ci.yml)
 
 `SlotMap<S>` — the generational slot-map column. It is a thin handle discipline over a generational storage column (`S: Store.Protocol & Buffer.Protocol`): inserting yields a **handle** (a slot index paired with a generation), and a handle keeps resolving as long as its slot has not been reused. Remove a slot and its generation bumps, so a stale handle to a since-reused slot is **detected**, not silently misread — the classic fix for the ABA / dangling-index problem in index-based containers.
 
@@ -38,7 +38,7 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-slot-map-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-slot-map.git", branch: "main")
 ]
 ```
 
@@ -48,7 +48,7 @@ Add a product to your target:
 .target(
     name: "App",
     dependencies: [
-        .product(name: "SlotMap Primitives", package: "swift-slot-map-primitives")
+        .product(name: "SlotMap", package: "swift-slot-map")
     ]
 )
 ```
@@ -61,7 +61,7 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 | Product | Contents | When to import |
 |---------|----------|----------------|
-| `SlotMap Primitives` | Umbrella — re-exports the type | Most consumers |
+| `SlotMap` | Umbrella — re-exports the type | Most consumers |
 | `SlotMap Primitive` | `SlotMap<S>` — the generational handle discipline | Naming the type directly |
 
 ---
@@ -80,9 +80,9 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 ## Related Packages
 
-- [`swift-storage-arena-primitives`](https://github.com/swift-primitives/swift-storage-arena-primitives) — `Storage.Generational`, the generational substrate behind a slot map.
-- [`swift-store-primitives`](https://github.com/swift-primitives/swift-store-primitives) — `Store.Protocol`, the column capability `SlotMap` is built over.
-- [`swift-shared-primitives`](https://github.com/swift-primitives/swift-shared-primitives) — `Shared`, an optional CoW backing for a slot map.
+- [`swift-storage-arena`](https://github.com/swift-molecules/swift-storage-arena) — `Storage.Generational`, the generational substrate behind a slot map.
+- [`swift-store`](https://github.com/swift-molecules/swift-store) — `Store.Protocol`, the column capability `SlotMap` is built over.
+- [`swift-shared`](https://github.com/swift-molecules/swift-shared) — `Shared`, an optional CoW backing for a slot map.
 
 ---
 
