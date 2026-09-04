@@ -1,7 +1,7 @@
 import Buffer_Test_Support
 import Index
 import Memory_Allocator_Primitive
-import Memory_Heap
+import Memory
 import Ownership_Shared_Primitive
 import SlotMap
 import Storage_Generational

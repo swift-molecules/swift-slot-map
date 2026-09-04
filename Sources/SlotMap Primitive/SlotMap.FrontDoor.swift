@@ -1,5 +1,5 @@
 public import Memory_Allocator_Primitive
-public import Memory_Heap
+public import Memory
 public import Storage_Generational
 public import Storage_Primitive
 

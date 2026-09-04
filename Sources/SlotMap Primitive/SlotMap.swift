@@ -1,6 +1,6 @@
 public import Index
 public import Memory_Allocator_Primitive
-public import Memory_Heap
+public import Memory
 public import Ownership_Shared_Primitive
 public import Storage_Generational
 public import Storage_Primitive
