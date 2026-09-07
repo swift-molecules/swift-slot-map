@@ -6,7 +6,7 @@ public import SlotMap_Primitive
 public import Storage_Generational
 public import Storage_Primitive
 public import Store_Primitive
-public import Store_Protocol
+public import Store
 
 extension __SlotMap where S: ~Copyable {
 

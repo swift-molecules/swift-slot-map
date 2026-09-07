@@ -67,7 +67,7 @@ let package = Package(
                 .product(name: "Storage Primitive", package: "swift-storage"),
                 .product(name: "Store Primitive", package: "swift-storage"),
                 .product(name: "Store Protocol", package: "swift-storage"),
-                .product(name: "Buffer Protocol", package: "swift-buffer"),
+                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Ownership Shared Primitive",
                     package: "swift-ownership-shared"
@@ -92,7 +92,7 @@ let package = Package(
                 .product(name: "Storage Primitive", package: "swift-storage"),
                 .product(name: "Store Primitive", package: "swift-storage"),
                 .product(name: "Store Protocol", package: "swift-storage"),
-                .product(name: "Buffer Protocol", package: "swift-buffer"),
+                .product(name: "Buffer", package: "swift-buffer"),
                 .product(
                     name: "Ownership Shared Primitive",
                     package: "swift-ownership-shared"

@@ -1,8 +1,8 @@
-public import Buffer_Protocol
+public import Buffer
 public import Index
 import Ordinal_Standard_Library_Integration
 public import SlotMap_Primitive
-public import Store_Protocol
+public import Store
 
 extension __SlotMap
 where
