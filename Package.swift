@@ -104,7 +104,7 @@ let package = Package(
                 ),
                 .product(name: "Index", package: "swift-index"),
                 .product(
-                    name: "Ordinal Standard Library Integration",
+                    name: "Ordinal",
                     package: "swift-ordinal"
                 ),
             ]
@@ -119,11 +119,11 @@ let package = Package(
                     package: "swift-buffer"
                 ),
                 .product(
-                    name: "Tagged Standard Library Integration",
+                    name: "Tagged",
                     package: "swift-tagged"
                 ),
                 .product(
-                    name: "Ordinal Standard Library Integration",
+                    name: "Ordinal",
                     package: "swift-ordinal"
                 ),
                 .product(name: "Index", package: "swift-index"),

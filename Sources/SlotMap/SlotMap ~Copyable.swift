@@ -1,6 +1,6 @@
 public import Buffer
 public import Index
-import Ordinal_Standard_Library_Integration
+import Ordinal
 public import SlotMap_Primitive
 public import Store
 
