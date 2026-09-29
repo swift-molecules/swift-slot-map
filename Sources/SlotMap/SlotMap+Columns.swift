@@ -1,11 +1,9 @@
 import Index
-public import Memory_Allocator_Primitive
+public import Memory_Allocator
 public import Memory
 public import Ownership_Shared_Primitive
 public import SlotMap_Primitive
-public import Storage_Generational
-public import Storage_Primitive
-public import Store_Primitive
+public import Storage
 public import Store
 
 extension __SlotMap where S: ~Copyable {

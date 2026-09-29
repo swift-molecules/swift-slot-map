@@ -1,12 +1,11 @@
 import Buffer_Test_Support
 import Index
-import Memory_Allocator_Primitive
+import Memory_Allocator
 import Memory
 import Ownership_Shared_Primitive
 import SlotMap
-import Storage_Generational
-import Storage_Primitive
-import Store_Primitive
+import Storage
+import Store
 import Testing
 
 private typealias Slots<E: ~Copyable> =
