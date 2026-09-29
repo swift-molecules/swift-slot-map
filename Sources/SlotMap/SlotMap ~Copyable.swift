@@ -11,7 +11,7 @@ where
 {
 
     @inlinable
-    public var count: Index.Index<S.Element>.Count {
+    public var count: Index::Index<S.Element>.Count {
         store.count
     }
 
@@ -19,10 +19,10 @@ where
     public var isEmpty: Bool { store.isEmpty }
 
     @inlinable
-    public var capacity: Index.Index<S.Element>.Count { store.capacity }
+    public var capacity: Index::Index<S.Element>.Count { store.capacity }
 
     @inlinable
-    public var freeCapacity: Index.Index<S.Element>.Count {
+    public var freeCapacity: Index::Index<S.Element>.Count {
         store.capacity.subtract.saturating(store.count)
     }
 }
