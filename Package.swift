@@ -70,6 +70,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
+.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Storage", package: "swift-storage"),
             ]
@@ -90,6 +91,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
+.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Index", package: "swift-index"),
                 .product(
                     name: "Ordinal",
@@ -120,6 +122,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
+.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Ownership Shared Primitive",
