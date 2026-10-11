@@ -20,7 +20,7 @@ private struct Reference {
     var stale: [(handle: Handle, id: Int)] = []
 
     init(capacity: Int) {
-        self.slots = Swift.Array(repeating: Slot(), count: capacity)
+        self.slots = Swift::Array(repeating: Slot(), count: capacity)
     }
 }
 
