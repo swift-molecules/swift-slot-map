@@ -20,7 +20,9 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/swift-atoms/swift-storage.git",
-            branch: "main", traits: ["Generational"]),
+            branch: "main",
+            traits: ["Generational"]
+        ),
         .package(
             url: "https://github.com/swift-atoms/swift-store.git",
             branch: "main"
@@ -70,7 +72,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
-.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
+                .product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Storage", package: "swift-storage"),
             ]
@@ -91,7 +93,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
-.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
+                .product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Index", package: "swift-index"),
                 .product(
                     name: "Ordinal",
@@ -122,7 +124,7 @@ let package = Package(
                     name: "Memory Allocator",
                     package: "swift-memory-allocation"
                 ),
-.product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
+                .product(name: "Memory Allocator Pool", package: "swift-memory-allocation"),
                 .product(name: "Memory", package: "swift-memory"),
                 .product(
                     name: "Ownership Shared Primitive",
@@ -137,14 +139,15 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    target.swiftSettings = (target.swiftSettings ?? []) + [
-        .strictMemorySafety(),
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
-        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableExperimentalFeature("Lifetimes"),
-        .treatAllWarnings(as: .error),
-    ]
+    target.swiftSettings =
+        (target.swiftSettings ?? []) + [
+            .strictMemorySafety(),
+            .enableUpcomingFeature("ExistentialAny"),
+            .enableUpcomingFeature("InternalImportsByDefault"),
+            .enableUpcomingFeature("MemberImportVisibility"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableExperimentalFeature("Lifetimes"),
+            .treatAllWarnings(as: .error),
+        ]
 }

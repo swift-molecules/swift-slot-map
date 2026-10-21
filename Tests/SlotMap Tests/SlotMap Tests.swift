@@ -1,8 +1,8 @@
 import Buffer_Test_Support
 import Index
+import Memory
 import Memory_Allocator
 import Memory_Allocator_Pool
-import Memory
 import Ownership_Shared_Primitive
 import SlotMap
 import Storage

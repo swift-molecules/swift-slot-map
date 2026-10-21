@@ -1,7 +1,7 @@
 public import Index
+public import Memory
 public import Memory_Allocator
 public import Memory_Allocator_Pool
-public import Memory
 public import Ownership_Shared_Primitive
 public import Storage
 public import Store
