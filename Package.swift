@@ -81,7 +81,7 @@ let package = Package(
         .target(
             name: "SlotMap",
             dependencies: [
-                "SlotMap Primitive",
+                .target(name: "SlotMap Primitive"),
                 .product(name: "Store", package: "swift-store"),
                 .product(name: "Buffer", package: "swift-buffer"),
                 .product(
@@ -106,7 +106,7 @@ let package = Package(
         .testTarget(
             name: "SlotMap Tests",
             dependencies: [
-                "SlotMap",
+                .target(name: "SlotMap"),
                 .product(
                     name: "Buffer Test Support",
                     package: "swift-buffer"
