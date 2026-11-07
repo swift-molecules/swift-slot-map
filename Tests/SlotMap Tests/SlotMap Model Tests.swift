@@ -659,14 +659,18 @@ private func runFleetStream(seed: UInt64) -> Model.Verdict {
     return stream.verdict
 }
 
-@Suite
-struct `SlotMap Model` {
-    @Suite struct Unit {}
-    @Suite struct `Edge Case` {}
-    @Suite struct Integration {}
+enum `SlotMap Model Tests` {}
+
+extension `SlotMap Model Tests` {
+    @Suite
+    struct `SlotMap Model` {
+        @Suite struct Unit {}
+        @Suite struct `Edge Case` {}
+        @Suite struct Integration {}
+    }
 }
 
-extension `SlotMap Model`.Integration {
+extension `SlotMap Model Tests`.`SlotMap Model`.Integration {
     @Test(arguments: Model.seeds(default: [0x51A7_3A21, 0x0D1C_E5E5]))
     func `direct move-only stream: handle laws hold and teardown is exact`(seed: UInt64) {
         let verdict = runDirectStream(seed: seed)
@@ -686,7 +690,7 @@ extension `SlotMap Model`.Integration {
     }
 }
 
-extension `SlotMap Model`.Unit {
+extension `SlotMap Model Tests`.`SlotMap Model`.Unit {
     @Test
     func `typed counts cohere: count + freeCapacity == capacity throughout`() {
         var map = SlotMap<Int>(slotCapacity: 4)
@@ -704,7 +708,7 @@ extension `SlotMap Model`.Unit {
     }
 }
 
-extension `SlotMap Model`.`Edge Case` {
+extension `SlotMap Model Tests`.`SlotMap Model`.`Edge Case` {
     @Test
     func `a sibling forked while a handle was stale keeps rejecting it after detach`() {
         var first = SlotMap<Int>.Shared(slotCapacity: 2)
