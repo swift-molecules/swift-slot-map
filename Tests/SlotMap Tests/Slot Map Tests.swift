@@ -217,7 +217,7 @@ extension `SlotMap Tests` {
             var m = SlotMap<Int>(slotCapacity: 2)
             let h1 = try m.insert(1)
             try m.insert(2)
-            do {
+            do throws(SlotMap<Int>.Error) {
                 try m.insert(3)
                 Issue.record("insert on a full map returned a handle")
             } catch {
@@ -236,7 +236,7 @@ extension `SlotMap Tests` {
             var m = SlotMap<Int>.Shared(slotCapacity: 1)
             try m.insert(1)
             let sibling = m
-            do {
+            do throws(SlotMap<Int>.Shared.Error) {
                 try m.insert(2)
                 Issue.record("insert on a full shared map returned a handle")
             } catch {
@@ -254,7 +254,7 @@ extension `SlotMap Tests` {
             do {
                 var m = SlotMap<MapItem>(slotCapacity: 1)
                 try m.insert(MapItem(1))
-                do {
+                do throws(SlotMap<MapItem>.Error) {
                     try m.insert(MapItem(2))
                     Issue.record("insert on a full map returned a handle")
                 } catch {
@@ -274,13 +274,13 @@ extension `SlotMap Tests` {
             _ = m.remove(h)
             try m.insert(2)
             var called = false
-            do {
+            do throws(SlotMap<Int>.Error) {
                 _ = try m.withElement(at: h) { copy $0 }
                 Issue.record("withElement accepted a stale handle")
             } catch {
                 #expect(error == .stale)
             }
-            do {
+            do throws(SlotMap<Int>.Error) {
                 try m.withMutableElement(at: h) { _ in called = true }
                 Issue.record("withMutableElement accepted a stale handle")
             } catch {
@@ -296,13 +296,13 @@ extension `SlotMap Tests` {
             _ = m.remove(h)
             let live = try m.insert(2)
             let sibling = m
-            do {
+            do throws(SlotMap<Int>.Shared.Error) {
                 _ = try m.withElement(at: h) { copy $0 }
                 Issue.record("withElement accepted a stale handle")
             } catch {
                 #expect(error == .stale)
             }
-            do {
+            do throws(SlotMap<Int>.Shared.Error) {
                 try m.withMutableElement(at: h) { $0 = 99 }
                 Issue.record("withMutableElement accepted a stale handle")
             } catch {

@@ -112,7 +112,7 @@ extension DirectStream {
         let id = nextID
         nextID += 1
         let handle: Handle
-        do {
+        do throws(SlotMap<Model.Element.Tracked>.Error) {
             handle = try map.insert(Model.Element.Tracked(id: id, census: census))
         } catch {
             verdict.diverged(["insert below capacity threw \(error)"])
@@ -148,7 +148,7 @@ extension DirectStream {
     mutating func readLive() {
         let entry = model.live[rng.below(model.live.count)]
         verdict.record("read id=\(entry.id)")
-        do {
+        do throws(SlotMap<Model.Element.Tracked>.Error) {
             let id = try map.withElement(at: entry.handle) {
                 (element: borrowing Model.Element.Tracked) in element.id
             }
@@ -167,7 +167,7 @@ extension DirectStream {
         nextID += 1
         verdict.record("mutate @\(entry.handle.index) \(entry.id)→\(id)")
         let census = self.census
-        do {
+        do throws(SlotMap<Model.Element.Tracked>.Error) {
             try map.withMutableElement(at: entry.handle) {
                 (element: inout Model.Element.Tracked) in
                 element = Model.Element.Tracked(id: id, census: census)
@@ -238,7 +238,7 @@ extension DirectStream {
                     "α: live handle @\(entry.handle.index)g\(entry.handle.generation) rejected"
                 )
             } else {
-                do {
+                do throws(SlotMap<Model.Element.Tracked>.Error) {
                     let id = try map.withElement(at: entry.handle) {
                         (element: borrowing Model.Element.Tracked) in element.id
                     }
@@ -343,7 +343,7 @@ extension CloneStream {
         let id = nextID
         nextID += 1
         let handle: Handle
-        do {
+        do throws(SlotMap<Int>.Error) {
             handle = try map.insert(id)
         } catch {
             verdict.diverged(["insert below capacity threw \(error)"])
@@ -370,7 +370,7 @@ extension CloneStream {
     mutating func readLive() {
         let entry = model.live[rng.below(model.live.count)]
         verdict.record("read id=\(entry.id)")
-        do {
+        do throws(SlotMap<Int>.Error) {
             let id = try map.withElement(at: entry.handle) { (element: borrowing Int) in copy element }
             if id != entry.id {
                 verdict.diverged(["withElement at live handle: \(id), model \(entry.id)"])
@@ -399,7 +399,7 @@ extension CloneStream {
         if forked.liveCount < forked.capacity {
             let id = nextID
             nextID += 1
-            do {
+            do throws(SlotMap<Int>.Error) {
                 let handle = try copy.insert(id)
                 verdict.diverged(forked.admit(handle, id: id))
             } catch {
@@ -445,7 +445,7 @@ extension CloneStream {
                     "α: live handle @\(entry.handle.index)g\(entry.handle.generation) rejected"
                 )
             } else {
-                do {
+                do throws(SlotMap<Int>.Error) {
                     let id = try map.withElement(at: entry.handle) { (element: borrowing Int) in
                         copy element
                     }
@@ -538,7 +538,7 @@ extension FleetStream {
         let id = nextID
         nextID += 1
         let handle: Handle
-        do {
+        do throws(SlotMap<Int>.Shared.Error) {
             handle = try siblings[target].insert(id)
         } catch {
             verdict.diverged(["insert[\(target)] below capacity threw \(error)"])
@@ -568,7 +568,7 @@ extension FleetStream {
         let id = nextID
         nextID += 1
         verdict.record("mutate[\(target)] @\(entry.handle.index) \(entry.id)→\(id)")
-        do {
+        do throws(SlotMap<Int>.Shared.Error) {
             try siblings[target].withMutableElement(at: entry.handle) { (element: inout Int) in
                 element = id
             }
@@ -583,7 +583,7 @@ extension FleetStream {
     mutating func readLive(on target: Int) {
         let entry = models[target].live[rng.below(models[target].live.count)]
         verdict.record("read[\(target)] id=\(entry.id)")
-        do {
+        do throws(SlotMap<Int>.Shared.Error) {
             let id = try siblings[target].withElement(at: entry.handle) { (element: borrowing Int) in
                 copy element
             }
@@ -633,7 +633,7 @@ extension FleetStream {
                         "α: sibling \(index) rejected live @\(entry.handle.index)g\(entry.handle.generation)"
                     )
                 } else {
-                    do {
+                    do throws(SlotMap<Int>.Shared.Error) {
                         let id = try siblings[index].withElement(at: entry.handle) {
                             (element: borrowing Int) in copy element
                         }
