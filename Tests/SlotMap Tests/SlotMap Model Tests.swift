@@ -111,7 +111,13 @@ extension DirectStream {
     mutating func insertNew() {
         let id = nextID
         nextID += 1
-        let handle = map.insert(Model.Element.Tracked(id: id, census: census))
+        let handle: Handle
+        do {
+            handle = try map.insert(Model.Element.Tracked(id: id, census: census))
+        } catch {
+            verdict.diverged(["insert below capacity threw \(error)"])
+            return
+        }
         verdict.record("insert id=\(id) → @\(handle.index)g\(handle.generation)")
         verdict.diverged(model.admit(handle, id: id))
     }
@@ -142,11 +148,15 @@ extension DirectStream {
     mutating func readLive() {
         let entry = model.live[rng.below(model.live.count)]
         verdict.record("read id=\(entry.id)")
-        let id = map.withElement(at: entry.handle) { (element: borrowing Model.Element.Tracked) in
-            element.id
-        }
-        if id != entry.id {
-            verdict.diverged(["withElement at live handle: \(id), model \(entry.id)"])
+        do {
+            let id = try map.withElement(at: entry.handle) {
+                (element: borrowing Model.Element.Tracked) in element.id
+            }
+            if id != entry.id {
+                verdict.diverged(["withElement at live handle: \(id), model \(entry.id)"])
+            }
+        } catch {
+            verdict.diverged(["withElement rejected a LIVE handle (α): \(error)"])
         }
     }
 
@@ -157,8 +167,14 @@ extension DirectStream {
         nextID += 1
         verdict.record("mutate @\(entry.handle.index) \(entry.id)→\(id)")
         let census = self.census
-        map.withMutableElement(at: entry.handle) { (element: inout Model.Element.Tracked) in
-            element = Model.Element.Tracked(id: id, census: census)
+        do {
+            try map.withMutableElement(at: entry.handle) {
+                (element: inout Model.Element.Tracked) in
+                element = Model.Element.Tracked(id: id, census: census)
+            }
+        } catch {
+            verdict.diverged(["withMutableElement rejected a LIVE handle (α): \(error)"])
+            return
         }
         expectedDeaths += 1
         model.live[position].id = id
@@ -222,11 +238,15 @@ extension DirectStream {
                     "α: live handle @\(entry.handle.index)g\(entry.handle.generation) rejected"
                 )
             } else {
-                let id = map.withElement(at: entry.handle) {
-                    (element: borrowing Model.Element.Tracked) in element.id
-                }
-                if id != entry.id {
-                    findings.append("live handle resolves \(id), model \(entry.id)")
+                do {
+                    let id = try map.withElement(at: entry.handle) {
+                        (element: borrowing Model.Element.Tracked) in element.id
+                    }
+                    if id != entry.id {
+                        findings.append("live handle resolves \(id), model \(entry.id)")
+                    }
+                } catch {
+                    findings.append("withElement rejected a contained handle: \(error)")
                 }
             }
         }
@@ -322,7 +342,13 @@ extension CloneStream {
     mutating func insertNew() {
         let id = nextID
         nextID += 1
-        let handle = map.insert(id)
+        let handle: Handle
+        do {
+            handle = try map.insert(id)
+        } catch {
+            verdict.diverged(["insert below capacity threw \(error)"])
+            return
+        }
         verdict.record("insert id=\(id) → @\(handle.index)g\(handle.generation)")
         verdict.diverged(model.admit(handle, id: id))
     }
@@ -344,9 +370,13 @@ extension CloneStream {
     mutating func readLive() {
         let entry = model.live[rng.below(model.live.count)]
         verdict.record("read id=\(entry.id)")
-        let id = map.withElement(at: entry.handle) { (element: borrowing Int) in copy element }
-        if id != entry.id {
-            verdict.diverged(["withElement at live handle: \(id), model \(entry.id)"])
+        do {
+            let id = try map.withElement(at: entry.handle) { (element: borrowing Int) in copy element }
+            if id != entry.id {
+                verdict.diverged(["withElement at live handle: \(id), model \(entry.id)"])
+            }
+        } catch {
+            verdict.diverged(["withElement rejected a LIVE handle (α): \(error)"])
         }
     }
 
@@ -369,8 +399,12 @@ extension CloneStream {
         if forked.liveCount < forked.capacity {
             let id = nextID
             nextID += 1
-            let handle = copy.insert(id)
-            verdict.diverged(forked.admit(handle, id: id))
+            do {
+                let handle = try copy.insert(id)
+                verdict.diverged(forked.admit(handle, id: id))
+            } catch {
+                verdict.diverged(["forked insert below capacity threw \(error)"])
+            }
         }
         if !forked.live.isEmpty {
             let position = rng.below(forked.live.count)
@@ -411,11 +445,15 @@ extension CloneStream {
                     "α: live handle @\(entry.handle.index)g\(entry.handle.generation) rejected"
                 )
             } else {
-                let id = map.withElement(at: entry.handle) { (element: borrowing Int) in
-                    copy element
-                }
-                if id != entry.id {
-                    findings.append("live handle resolves \(id), model \(entry.id)")
+                do {
+                    let id = try map.withElement(at: entry.handle) { (element: borrowing Int) in
+                        copy element
+                    }
+                    if id != entry.id {
+                        findings.append("live handle resolves \(id), model \(entry.id)")
+                    }
+                } catch {
+                    findings.append("withElement rejected a contained handle: \(error)")
                 }
             }
         }
@@ -499,7 +537,13 @@ extension FleetStream {
     mutating func insertNew(into target: Int) {
         let id = nextID
         nextID += 1
-        let handle = siblings[target].insert(id)
+        let handle: Handle
+        do {
+            handle = try siblings[target].insert(id)
+        } catch {
+            verdict.diverged(["insert[\(target)] below capacity threw \(error)"])
+            return
+        }
         verdict.record("insert[\(target)] id=\(id) → @\(handle.index)g\(handle.generation)")
         verdict.diverged(models[target].admit(handle, id: id))
     }
@@ -524,8 +568,13 @@ extension FleetStream {
         let id = nextID
         nextID += 1
         verdict.record("mutate[\(target)] @\(entry.handle.index) \(entry.id)→\(id)")
-        siblings[target].withMutableElement(at: entry.handle) { (element: inout Int) in
-            element = id
+        do {
+            try siblings[target].withMutableElement(at: entry.handle) { (element: inout Int) in
+                element = id
+            }
+        } catch {
+            verdict.diverged(["withMutableElement on sibling \(target) rejected a LIVE handle: \(error)"])
+            return
         }
         models[target].live[position].id = id
         models[target].slots[entry.handle.index].id = id
@@ -534,11 +583,15 @@ extension FleetStream {
     mutating func readLive(on target: Int) {
         let entry = models[target].live[rng.below(models[target].live.count)]
         verdict.record("read[\(target)] id=\(entry.id)")
-        let id = siblings[target].withElement(at: entry.handle) { (element: borrowing Int) in
-            copy element
-        }
-        if id != entry.id {
-            verdict.diverged(["withElement on sibling \(target): \(id), model \(entry.id)"])
+        do {
+            let id = try siblings[target].withElement(at: entry.handle) { (element: borrowing Int) in
+                copy element
+            }
+            if id != entry.id {
+                verdict.diverged(["withElement on sibling \(target): \(id), model \(entry.id)"])
+            }
+        } catch {
+            verdict.diverged(["withElement on sibling \(target) rejected a LIVE handle: \(error)"])
         }
     }
 
@@ -580,13 +633,17 @@ extension FleetStream {
                         "α: sibling \(index) rejected live @\(entry.handle.index)g\(entry.handle.generation)"
                     )
                 } else {
-                    let id = siblings[index].withElement(at: entry.handle) {
-                        (element: borrowing Int) in copy element
-                    }
-                    if id != entry.id {
-                        findings.append(
-                            "sibling \(index) resolves \(id) at @\(entry.handle.index), model \(entry.id)"
-                        )
+                    do {
+                        let id = try siblings[index].withElement(at: entry.handle) {
+                            (element: borrowing Int) in copy element
+                        }
+                        if id != entry.id {
+                            findings.append(
+                                "sibling \(index) resolves \(id) at @\(entry.handle.index), model \(entry.id)"
+                            )
+                        }
+                    } catch {
+                        findings.append("sibling \(index) rejected a contained handle: \(error)")
                     }
                 }
             }
@@ -692,10 +749,10 @@ extension `SlotMap Model Tests`.`SlotMap Model`.Integration {
 
 extension `SlotMap Model Tests`.`SlotMap Model`.Unit {
     @Test
-    func `typed counts cohere: count + freeCapacity == capacity throughout`() {
+    func `typed counts cohere: count + freeCapacity == capacity throughout`() throws {
         var map = SlotMap<Int>(slotCapacity: 4)
-        let h1 = map.insert(1)
-        _ = map.insert(2)
+        let h1 = try map.insert(1)
+        try map.insert(2)
         let count = map.count
         let free = map.freeCapacity
         #expect(count == Index<Int>.Count(2))
@@ -710,14 +767,14 @@ extension `SlotMap Model Tests`.`SlotMap Model`.Unit {
 
 extension `SlotMap Model Tests`.`SlotMap Model`.`Edge Case` {
     @Test
-    func `a sibling forked while a handle was stale keeps rejecting it after detach`() {
+    func `a sibling forked while a handle was stale keeps rejecting it after detach`() throws {
         var first = SlotMap<Int>.Shared(slotCapacity: 2)
-        let handle = first.insert(7)
+        let handle = try first.insert(7)
         let removed: Int? = first.remove(handle)
         #expect(removed == 7)
 
         var second = first
-        _ = second.insert(9)
+        try second.insert(9)
 
         let staleOnFirst = first.contains(handle)
         let staleOnSecond = second.contains(handle)
@@ -730,10 +787,10 @@ extension `SlotMap Model Tests`.`SlotMap Model`.`Edge Case` {
     }
 
     @Test
-    func `removeAll on one sibling leaves the other's elements and handles intact`() {
+    func `removeAll on one sibling leaves the other's elements and handles intact`() throws {
         var first = SlotMap<Int>.Shared(slotCapacity: 3)
-        let a = first.insert(1)
-        let b = first.insert(2)
+        let a = try first.insert(1)
+        let b = try first.insert(2)
         var second = first
 
         second.removeAll()
@@ -744,8 +801,8 @@ extension `SlotMap Model Tests`.`SlotMap Model`.`Edge Case` {
         let bOnFirst = first.contains(b)
         #expect(aOnFirst)
         #expect(bOnFirst)
-        let one = first.withElement(at: a) { (element: borrowing Int) in copy element }
-        let two = first.withElement(at: b) { (element: borrowing Int) in copy element }
+        let one = try first.withElement(at: a) { (element: borrowing Int) in copy element }
+        let two = try first.withElement(at: b) { (element: borrowing Int) in copy element }
         #expect(one == 1)
         #expect(two == 2)
         let aOnSecond = second.contains(a)

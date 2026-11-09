@@ -11,16 +11,22 @@ extension __SlotMap where S: ~Copyable {
 
     @inlinable
     @discardableResult
-    public mutating func insert<E: ~Copyable>(_ element: consuming E) -> Handle
+    public mutating func insert<E: ~Copyable>(_ element: consuming E) throws(Error) -> Handle
     where S == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E> {
-        store.insert(element)
+        guard store.count < store.capacity else {
+            throw .full
+        }
+        return store.insert(element)
     }
 
     @inlinable
     @discardableResult
-    public mutating func insert<E: ~Copyable>(_ element: consuming E) -> Handle
+    public mutating func insert<E: ~Copyable>(_ element: consuming E) throws(Error) -> Handle
     where S == Ownership.Shared<E, Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E>> {
-        store.withUnique(consuming: element) { column, element in
+        guard store.withColumn({ $0.count < $0.capacity }) else {
+            throw .full
+        }
+        return store.withUnique(consuming: element) { column, element in
             column.insert(element)
         }
     }
@@ -71,34 +77,46 @@ extension __SlotMap where S: ~Copyable {
     public func withElement<E: ~Copyable, R>(
         at handle: Handle,
         _ body: (borrowing E) -> R
-    ) -> R where S == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E> {
-        body(store[handle])
+    ) throws(Error) -> R where S == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E> {
+        guard store.contains(handle) else {
+            throw .stale
+        }
+        return body(store[handle])
     }
 
     @inlinable
     public func withElement<E: ~Copyable, R>(
         at handle: Handle,
         _ body: (borrowing E) -> R
-    ) -> R
+    ) throws(Error) -> R
     where S == Ownership.Shared<E, Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E>> {
-        store.withColumn { body($0[handle]) }
+        guard store.withColumn({ $0.contains(handle) }) else {
+            throw .stale
+        }
+        return store.withColumn { body($0[handle]) }
     }
 
     @inlinable
     public mutating func withMutableElement<E: ~Copyable, R>(
         at handle: Handle,
         _ body: (inout E) -> R
-    ) -> R where S == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E> {
-        body(&store[handle])
+    ) throws(Error) -> R where S == Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E> {
+        guard store.contains(handle) else {
+            throw .stale
+        }
+        return body(&store[handle])
     }
 
     @inlinable
     public mutating func withMutableElement<E: ~Copyable, R>(
         at handle: Handle,
         _ body: (inout E) -> R
-    ) -> R
+    ) throws(Error) -> R
     where S == Ownership.Shared<E, Storage<Memory.Allocator<Memory.Heap>.Pool>.Generational<E>> {
-        store.withUnique { body(&$0[handle]) }
+        guard store.withColumn({ $0.contains(handle) }) else {
+            throw .stale
+        }
+        return store.withUnique { body(&$0[handle]) }
     }
 }
 
